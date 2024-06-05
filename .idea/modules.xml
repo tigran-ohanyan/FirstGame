@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/FirstGame.iml" filepath="$PROJECT_DIR$/.idea/FirstGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mobile.notifications@2.3.2/Runtime/Runtime.iml" filepath="$PROJECT_DIR$/Library/PackageCache/com.unity.mobile.notifications@2.3.2/Runtime/Runtime.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mobile.notifications@2.3.2/Tests/Tests.iml" filepath="$PROJECT_DIR$/Library/PackageCache/com.unity.mobile.notifications@2.3.2/Tests/Tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Library/PackageCache/com.unity.adaptiveperformance.samsung.android@5.0.0/com.unity.adaptiveperformance.samsung.android@5.0.0.iml" filepath="$PROJECT_DIR$/Library/PackageCache/com.unity.adaptiveperformance.samsung.android@5.0.0/com.unity.adaptiveperformance.samsung.android@5.0.0.iml" />
+    </modules>
+  </component>
+</project>
