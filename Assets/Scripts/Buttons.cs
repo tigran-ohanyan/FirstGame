@@ -14,6 +14,7 @@ public class Buttons : MonoBehaviour
     // }
 
     public void ClickSound(){
-        FX.PlayOneShot(ClickFx);
+        if(PlayerPrefs.GetInt("MixerParamSound") == 1 )
+            FX.PlayOneShot(ClickFx);
     }
 }
