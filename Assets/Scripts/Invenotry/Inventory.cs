@@ -64,6 +64,7 @@ public class Inventory : MonoBehaviour
                             break;
                         }
                     }
+
                 }
             }
             else
@@ -111,6 +112,9 @@ public class Inventory : MonoBehaviour
                 img.sprite = Resources.Load<Sprite>("Icons/" + itemName);
                 //pref = Resources.Load("Prefabs/" + playerS.GetComponent<Player>().items[i]) as GameObject;
 				count.text = playerS.GetComponent<Player>().items[i, 1];
+				
+				playerS.GetComponent<Player>().GetItemFunctional();
+
                 //break;
             }
             else

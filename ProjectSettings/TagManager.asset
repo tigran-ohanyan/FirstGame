@@ -11,6 +11,9 @@ TagManager:
   - Take
   - InventoryManager
   - BookUI
+  - joystickCamera
+  - joystickMove
+  - FlashLightBtn
   layers:
   - Default
   - TransparentFX

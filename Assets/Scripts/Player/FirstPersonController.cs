@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FirstPersonController : MonoBehaviour
 {
-    public Transform cameraTransform;
-    public CharacterController characterController;
-    public Transform Player;
-    public float cameraSensitivity, moveSpeed;
+    private Transform cameraTransform;
+    private CharacterController characterController;
+    private Transform Player;
+    private float cameraSensitivity = 40.0f, moveSpeed = 5.0f;
     Vector2 lookInput;
     private float cameraPitch, moveInputDeadZone;
     int leftFingerId, rightFingerId;
@@ -15,10 +15,10 @@ public class FirstPersonController : MonoBehaviour
     Vector2 moveTouchStartPosition;
     Vector2 moveInput;
 
-    [SerializeField] private bool isGrounded;
+    private bool isGrounded;
 
     private float verticalVelocity;
-    [SerializeField] private float stickToGroundForce = 10.0F;
+    private float stickToGroundForce = 10.0F;
 
     private float dirX, dirY, cameraY, cameraX, xRotation = 0f;
     [SerializeField] Joystick joystickMove, joystickCamera;
@@ -31,6 +31,11 @@ public class FirstPersonController : MonoBehaviour
         halfScreenWidth = Screen.width/2;
         //moveInputDeadZone = Mathf.Pow(Screen.height / moveInputDeadZone, 2);
         moveInputDeadZone = Screen.height / 2;
+
+
+		cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+		Player = GameObject.FindGameObjectWithTag("Player").transform;
+		characterController = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
     }
 
     void Update(){
@@ -48,16 +53,16 @@ public class FirstPersonController : MonoBehaviour
         PlayerCamera();
         UseGravity();
     }
-    void PlayerMovement()
+    public void PlayerMovement()
     {
         dirX = joystickMove.Horizontal * moveSpeed * Time.deltaTime;
         dirY = joystickMove.Vertical * moveSpeed * Time.deltaTime;
 
         Vector3 moveVector = new Vector3(dirX, 0, dirY);
         //characterController.Move(moveVector * Time.deltaTime);
-        characterController.Move(transform.right * moveVector.x + transform.forward * moveVector.z);
+        characterController.Move(Player.transform.right * moveVector.x + Player.transform.forward * moveVector.z);
     }
-    void PlayerCamera()
+    public void PlayerCamera()
     {
         cameraX = joystickCamera.Horizontal * cameraSensitivity * Time.deltaTime;
         cameraY = joystickCamera.Vertical * cameraSensitivity * Time.deltaTime;
@@ -117,61 +122,22 @@ public class FirstPersonController : MonoBehaviour
             }
         }
     }
-
+/*
     void LookAround(){
         cameraPitch = Mathf.Clamp(cameraPitch - lookInput.y, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
 
         transform.Rotate(transform.up, lookInput.x);
     }
-
+	
     void Move(){
-       // Debug.Log(moveInput.sqrMagnitude);
         if(moveInput.sqrMagnitude <= moveInputDeadZone) return;
         Vector2 movementDirection = moveInput.normalized * moveSpeed * Time.deltaTime;
-       // transform.position = new Vector2(movementDirection.x, movementDirection.y);
         characterController.Move(transform.right *  movementDirection.x + transform.forward * movementDirection.y);
     }
-
+*/
     void UseGravity()
     {
-        /*float y = gameObject.GetComponent<Transform>().position.y;
-        if(y >= 1)
-        {
-            y -= y * Time.deltaTime;
-
-        }
-
-        transform.position = new Vector3(transform.position.x, y, transform.position.z);
-        Debug.Log(y);*/
-        /*
-        y = gameObject.GetComponent<Transform>().position.y;
-        isGrounded = characterController.isGrounded;
-        
-
-        if(isGrounded == false && y >= 1f)
-        {
-            gravity = y - 2f;
-            transform.position.y = gravity;
-           // Debug.Log(isGrounded);
-            //Debug.Log("Gravity - " + gravity);
-            //transform.position = new Vector3(transform.position.x, gravity, transform.position.z);
-            
-        }
-        else
-        {
-            gravity = 1f;
-            //gravity = 0.5f;
-            //Debug.Log(isGrounded);
-
-            // transform.position = new Vector3(transform.position.x, 1, transform.position.z);
-        }
-        Debug.Log(gravity);
-      //  transform.position = new Vector3(transform.position.x, gravity * Time.deltaTime, transform.position.z);
-        Debug.Log(characterController.isGrounded);*/
-
-       //isGrounded = controller.isGrounded;
-
         if (characterController.isGrounded)
         {
             verticalVelocity = -stickToGroundForce * Time.deltaTime;
