@@ -35,7 +35,8 @@ public class Player : MonoBehaviour
         Debug.Log("Saved Player : " + this.items);
         SaveSystem.SavePlayer(this);    
     }
-    
+
+    private Item[] itemList;
     public void LoadPlayer(){
         PlayerData data = SaveSystem.LoadPlayer();
         
@@ -49,6 +50,22 @@ public class Player : MonoBehaviour
         transform.position = position;
     
         items = data.items;
+		GameObject pref;
+        itemList = FindObjectsOfType<Item>();
+        for (int s = 0; s <= itemList.Length; s++)
+        {
+            for (int i = 0; i < items.Length / 2; i++)
+            {
+                if (items[i, 0] != null)
+                {
+                    pref = Resources.Load("Prefabs/" + items[i, 0]) as GameObject;
+                    if (pref.GetComponent<Item>().ItemID == itemList[s].ItemID)
+                    {
+                        itemList[s].gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
     }
 
     
