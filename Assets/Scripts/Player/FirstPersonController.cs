@@ -7,7 +7,7 @@ public class FirstPersonController : MonoBehaviour
     private Transform cameraTransform;
     private CharacterController characterController;
     private Transform Player;
-    private float cameraSensitivity = 40.0f, moveSpeed = 5.0f;
+    private float cameraSensitivity = 60.0f, moveSpeed = 5.0f;
     Vector2 lookInput;
     private float cameraPitch, moveInputDeadZone;
     int leftFingerId, rightFingerId;
