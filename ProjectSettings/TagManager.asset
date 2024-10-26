@@ -14,6 +14,8 @@ TagManager:
   - joystickCamera
   - joystickMove
   - FlashLightBtn
+  - BatterPercent
+  - Hood
   layers:
   - Default
   - TransparentFX

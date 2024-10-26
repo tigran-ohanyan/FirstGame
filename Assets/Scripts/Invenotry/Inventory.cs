@@ -33,35 +33,49 @@ public class Inventory : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
+        GameObject batteryPercentObj;
+        TextMeshProUGUI batteryPercent;
         if (Physics.Raycast(ray, out hit, 2f))
         {
             if (hit.collider.GetComponent<Item>())
             {
-                interactText.text = "Нажми на кнопку чтобы подабрать";
+                interactText.text = "Нажми на кнопку чтобы подобрать";
                 InteractionUI.SetActive(true);
                 takeBtn.SetActive(true);
                 if (isPressed == true)
                 {
                     isPressed = !isPressed;
+                    playerS.GetComponent<Player>()._itemsFromSave.Add((int)hit.collider.GetComponent<Item>().ItemID);
                     for (int i = 0; i <= playerS.GetComponent<Player>().items.Length/2; i++)
                     {
 						if(playerS.GetComponent<Player>().items[i, 0] == hit.collider.GetComponent<Item>().ItemName){
 							int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
 							_count += hit.collider.GetComponent<Item>().ItemCount;
 							playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
+							playerS.GetComponent<Player>().items[i, 2] = hit.collider.GetComponent<Item>().ItemID.ToString();
 							DisplayItem();
                             hit.collider.GetComponent<Item>().gameObject.SetActive(false);
                             break;
 						}
                         else if (playerS.GetComponent<Player>().items[i, 0] == null)
                         {
-                            playerS.GetComponent<Player>().items[i, 0] = hit.collider.GetComponent<Item>().ItemName;
-                            //int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
-							int _count = hit.collider.GetComponent<Item>().ItemCount;
-							playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
-                            DisplayItem();
-                            hit.collider.GetComponent<Item>().gameObject.SetActive(false);
-                            break;
+	                        if (hit.collider.GetComponent<Item>().ItemName == "Battery" && playerS.GetComponent<Player>().batteryEnergy == 0)
+	                        {
+		                        batteryPercentObj = GameObject.FindGameObjectWithTag("Hood").transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+		                        batteryPercent = batteryPercentObj.GetComponent<TextMeshProUGUI>();
+		                        batteryPercent.text = 100 + "%";
+		                        playerS.GetComponent<Player>().batteryEnergy += 100;
+		                        hit.collider.GetComponent<Item>().gameObject.SetActive(false);
+		                        break;
+	                        }
+	                        playerS.GetComponent<Player>().items[i, 0] = hit.collider.GetComponent<Item>().ItemName;
+	                        //int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
+	                        int _count = hit.collider.GetComponent<Item>().ItemCount;
+	                        playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
+	                        playerS.GetComponent<Player>().items[i, 2] = hit.collider.GetComponent<Item>().ItemID.ToString();
+	                        DisplayItem();
+	                        hit.collider.GetComponent<Item>().gameObject.SetActive(false);
+	                        break;
                         }
                     }
 
@@ -82,10 +96,10 @@ public class Inventory : MonoBehaviour
     }
 	
 	private GameObject pref;
-
+	
     public void DisplayItem()
     {
-	    for (int i = 0; i < playerS.GetComponent<Player>().items.Length / 2; i++) // CONTINUE!!!
+	    for (int i = 0; i < playerS.GetComponent<Player>().items.Length / 3; i++) // CONTINUE!!!
         {
             Transform cell = CellContainer.transform.GetChild(i);
             Transform icon = cell.GetChild(0);

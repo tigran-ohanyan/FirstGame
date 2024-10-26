@@ -2,18 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Drawing;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.VisualScripting;
+using System.Linq;
 public class Player : MonoBehaviour
 {
     public int level = 0;
     public int health = 100;
-    public string[,] items = new string[12, 2];
+    public int batteryEnergy = 0;
+    public string[,] items = new string[12, 3];
+    public List<int> _itemsFromSave = new List<int>();
 	[SerializeField]
 	private GameObject flashLightUI;
+    
+
 
     void Start()
     {
@@ -39,42 +45,49 @@ public class Player : MonoBehaviour
     private Item[] itemList;
     public void LoadPlayer(){
         PlayerData data = SaveSystem.LoadPlayer();
-        
-        level = data.level;
-        health = data.health;
-        
-        Vector3 position;
-        position.x = data.position[0];
-        position.y = data.position[1];
-        position.z = data.position[2];
-        transform.position = position;
-    
-        items = data.items;
-		GameObject pref;
-        itemList = FindObjectsOfType<Item>();
-        for (int s = 0; s <= itemList.Length; s++)
+
+        if (data != null)
         {
-            for (int i = 0; i < items.Length / 2; i++)
+            level = data.level;
+            health = data.health;
+
+            Vector3 position;
+            position.x = data.position[0];
+            position.y = data.position[1];
+            position.z = data.position[2];
+            transform.position = position;
+
+            items = data.items;
+            //Deleting items from loc
+            _itemsFromSave = data._itemsFromSave;
+            itemList = FindObjectsOfType<Item>();
+            if (_itemsFromSave != null && itemList != null)
             {
-                if (items[i, 0] != null)
+                for (int s = 0; s < _itemsFromSave.Count; s++)
                 {
-                    pref = Resources.Load("Prefabs/" + items[i, 0]) as GameObject;
-                    if (pref.GetComponent<Item>().ItemID == itemList[s].ItemID)
+                    Debug.Log($"itemsFromSave = {_itemsFromSave[s]}");
+                    for (int i = 0; i < itemList.Length; i++)
                     {
-                        itemList[s].gameObject.SetActive(false);
+                        if (itemList[i].ItemID == _itemsFromSave[s])
+                        {
+                            itemList[i].gameObject.SetActive(false);
+                        }
                     }
                 }
             }
+
+            // End Deleting
+            batteryEnergy = data.batteryEnergy;
+            Debug.Log($"BatteryEnergy = {batteryEnergy}");
         }
     }
 
-    
     public void GetItemFunctional()
     {
         if (items[0, 0] != null)
         {
-            
-            for (int i = 0; i < items.Length/2; i++)
+            Item FlashLightInstance = null;
+            for (int i = 0; i < items.Length / 3; i++)
             {
                 string className = items[i, 0];
                 if (className != null)
@@ -83,26 +96,39 @@ public class Player : MonoBehaviour
 
                     if (type != null && typeof(Item).IsAssignableFrom(type))
                     {
-                        Item instance = (Item)Activator.CreateInstance(type);
-                        // Теперь можно использовать экземпляр instance
-                        Debug.Log($"Created instance of {className}");
-						if (className == "FlashLight")
-                   		{
-                        	//TODO
-                        	//flashLightUI = GameObject.FindGameObjectWithTag("FlashLightBtn");
-                       		flashLightUI.SetActive(true);
-							flashLightUI.gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-							flashLightUI.gameObject.GetComponent<Button>().onClick.AddListener(() => { instance.FlashLightOnOff(); });
-                   		}
+
+                        if (className == "FlashLight")
+                        {
+                            FlashLightInstance = (Item)Activator.CreateInstance(type);
+                            Debug.Log($"Created instance of {className}");
+                            flashLightUI.SetActive(true);
+                            /*flashLightUI.gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+                            flashLightUI.gameObject.GetComponent<Button>().onClick.AddListener(() =>
+                            {
+                                FlashLightInstance.FlashLightOnOff();
+                            });*/
+                        }
+                        else
+                        {
+                            Item instance = (Item)Activator.CreateInstance(type);
+
+                        }
+                        /*else if (className == "Battery")
+                        {
+                            flashLightUI.gameObject.GetComponent<Button>().interactable = true;
+                            instance.ItemCount = items[i, 1].ToString();
+                        }*/
                     }
                     else
                     {
                         Debug.LogError($"Class {className} not found or does not inherit from Item.");
                     }
 
-                    
+
                 }
             }
+
+            
         }
     }
 

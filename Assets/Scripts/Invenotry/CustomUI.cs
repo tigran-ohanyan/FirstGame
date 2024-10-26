@@ -15,12 +15,12 @@ public class CustomUI : Editor
         EditorGUILayout.LabelField("2D Array Display", EditorStyles.boldLabel);
 
         // Проходим по каждому элементу двумерного массива
-        for (int i = 0; i < arrayExample.items.GetLength(0); i++)
+        for (int i = 0; i < arrayExample.items.GetLength(0); i++) // Первое измерение
         {
             // Начинаем новую строку
             EditorGUILayout.BeginHorizontal();
 
-            for (int j = 0; j < arrayExample.items.GetLength(1); j++)
+            for (int j = 0; j < arrayExample.items.GetLength(1); j++) // Второе измерение
             {
                 // Рисуем текстовое поле для каждого элемента массива
                 arrayExample.items[i, j] = EditorGUILayout.TextField(arrayExample.items[i, j]);
