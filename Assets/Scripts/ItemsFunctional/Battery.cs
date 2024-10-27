@@ -108,12 +108,12 @@ public class Battery : MonoBehaviour
                         playerObject.GetComponent<Player>().items[i, 0] = null;
                         playerObject.GetComponent<Player>().items[i, 1] = null;
                         playerObject.GetComponent<Player>().items[i, 2] = null;
-                        inventory.DisplayItem();
                     }
                     else
                     {
                         playerObject.GetComponent<Player>().items[i, 1] = (int.Parse(playerObject.GetComponent<Player>().items[i, 1]) - 1).ToString();
                     }
+                    inventory.DisplayItem();
                     
                     
                 }
