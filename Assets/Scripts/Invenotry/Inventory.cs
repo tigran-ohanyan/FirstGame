@@ -44,45 +44,63 @@ public class Inventory : MonoBehaviour
                 takeBtn.SetActive(true);
                 if (isPressed == true)
                 {
-                    isPressed = !isPressed;
-                    playerS.GetComponent<Player>()._itemsFromSave.Add((int)hit.collider.GetComponent<Item>().ItemID);
-                    for (int i = 0; i <= playerS.GetComponent<Player>().items.Length/2; i++)
-                    {
-						if(playerS.GetComponent<Player>().items[i, 0] == hit.collider.GetComponent<Item>().ItemName){
-							int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
-							_count += hit.collider.GetComponent<Item>().ItemCount;
-							playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
-							playerS.GetComponent<Player>().items[i, 2] = hit.collider.GetComponent<Item>().ItemID.ToString();
-							DisplayItem();
-                            hit.collider.GetComponent<Item>().gameObject.SetActive(false);
-                            break;
-						}
-                        else if (playerS.GetComponent<Player>().items[i, 0] == null)
-                        {
-	                        if (hit.collider.GetComponent<Item>().ItemName == "Battery" && playerS.GetComponent<Player>().batteryEnergy == 0)
-	                        {
-		                        batteryPercentObj = GameObject.FindGameObjectWithTag("Hood").transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
-		                        batteryPercent = batteryPercentObj.GetComponent<TextMeshProUGUI>();
-		                        batteryPercent.text = 100 + "%";
-		                        playerS.GetComponent<Player>().batteryEnergy += 100;
-		                        hit.collider.GetComponent<Item>().gameObject.SetActive(false);
-		                        break;
-	                        }
-	                        playerS.GetComponent<Player>().items[i, 0] = hit.collider.GetComponent<Item>().ItemName;
-	                        //int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
-	                        int _count = hit.collider.GetComponent<Item>().ItemCount;
-	                        playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
-	                        playerS.GetComponent<Player>().items[i, 2] = hit.collider.GetComponent<Item>().ItemID.ToString();
-	                        DisplayItem();
-	                        hit.collider.GetComponent<Item>().gameObject.SetActive(false);
-	                        break;
-                        }
-                    }
+	                isPressed = !isPressed;
+	                playerS.GetComponent<Player>()._itemsFromSave.Add((int)hit.collider.GetComponent<Item>().ItemID);
+	                for (int i = 0; i <= playerS.GetComponent<Player>().items.Length / 2; i++)
+	                {
+		                if (playerS.GetComponent<Player>().items[i, 0] == hit.collider.GetComponent<Item>().ItemName)
+		                {
+			                int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
+			                _count += hit.collider.GetComponent<Item>().ItemCount;
+			                playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
+			                playerS.GetComponent<Player>().items[i, 2] =
+				                hit.collider.GetComponent<Item>().ItemID.ToString();
+			                DisplayItem();
+			                hit.collider.GetComponent<Item>().gameObject.SetActive(false);
+			                break;
+		                }
+		                else if (playerS.GetComponent<Player>().items[i, 0] == null)
+		                {
+			                if (hit.collider.GetComponent<Item>().ItemName == "Battery" &&
+			                    playerS.GetComponent<Player>().batteryEnergy == 0)
+			                {
+				                batteryPercentObj = GameObject.FindGameObjectWithTag("Hood").transform.GetChild(0)
+					                .gameObject.transform.GetChild(0).gameObject;
+				                batteryPercent = batteryPercentObj.GetComponent<TextMeshProUGUI>();
+				                batteryPercent.text = 100 + "%";
+				                playerS.GetComponent<Player>().batteryEnergy += 100;
+				                hit.collider.GetComponent<Item>().gameObject.SetActive(false);
+				                break;
+			                }
+
+			                playerS.GetComponent<Player>().items[i, 0] = hit.collider.GetComponent<Item>().ItemName;
+			                //int _count = int.Parse(playerS.GetComponent<Player>().items[i, 1]);
+			                int _count = hit.collider.GetComponent<Item>().ItemCount;
+			                playerS.GetComponent<Player>().items[i, 1] = _count.ToString();
+			                playerS.GetComponent<Player>().items[i, 2] =
+				                hit.collider.GetComponent<Item>().ItemID.ToString();
+			                DisplayItem();
+			                hit.collider.GetComponent<Item>().gameObject.SetActive(false);
+			                break;
+		                }
+	                }
 
                 }
             }
+            else if (hit.collider.tag == "Door")
+            {
+	            Debug.Log("Door Interact");
+	            interactText.text = "Нажми на кнопку чтобы войти";
+	            InteractionUI.SetActive(true);
+	            takeBtn.SetActive(true);
+	            Loading loading = new Loading();
+	            takeBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+	            takeBtn.GetComponent<Button>().onClick.AddListener(() => { loading.LoadingProgress(3); });
+
+            }
             else
             {
+	            takeBtn.GetComponent<Button>().onClick.RemoveAllListeners();
                 InteractionUI.SetActive(false);
                 takeBtn.SetActive(false);
             }

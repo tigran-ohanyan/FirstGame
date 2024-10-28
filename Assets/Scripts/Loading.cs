@@ -32,13 +32,12 @@ public class Loading : MonoBehaviour
         AsyncOperation loadAsync = SceneManager.LoadSceneAsync(SceneNumber);
 
         loadAsync.allowSceneActivation = false;
-        Debug.Log("1");
         while (!loadAsync.isDone){
             
             scale.value = loadAsync.progress;
 
             if(loadAsync.progress >= .9f && !loadAsync.allowSceneActivation){
-                yield return new WaitForSeconds(2.2f);
+                yield return new WaitForSeconds(5f);
                 loadAsync.allowSceneActivation = true;
             }
             yield return null;

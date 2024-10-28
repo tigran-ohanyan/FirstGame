@@ -16,6 +16,7 @@ TagManager:
   - FlashLightBtn
   - BatterPercent
   - Hood
+  - Door
   layers:
   - Default
   - TransparentFX
