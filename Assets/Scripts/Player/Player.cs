@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private GameObject flashLightUI;
     
-
+    public Vector3 position;
 
     void Start()
     {
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
             level = data.level;
             health = data.health;
 
-            Vector3 position;
+            
             position.x = data.position[0];
             position.y = data.position[1];
             position.z = data.position[2];

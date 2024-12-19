@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Inventory : MonoBehaviour
 {
@@ -18,7 +19,6 @@ public class Inventory : MonoBehaviour
     {
   		playerS = GameObject.FindGameObjectWithTag("Player");
         Debug.Log("Items list = " + playerS.GetComponent<Player>().items.Length);
-
         Debug.Log(Application.persistentDataPath);
 		DisplayItem();
 
@@ -87,16 +87,46 @@ public class Inventory : MonoBehaviour
 
                 }
             }
-            else if (hit.collider.tag == "Door")
+            else if (hit.collider.tag == "Car")
             {
-	            Debug.Log("Door Interact");
-	            interactText.text = "Нажми на кнопку чтобы войти";
+	            interactText.text = "Нажми на кнопку чтобы поехать";
 	            InteractionUI.SetActive(true);
 	            takeBtn.SetActive(true);
-	            Loading loading = new Loading();
+	            PlayerPrefs.SetInt("Location", 2);
+	            
+	            //playerS.GetComponent<Player>().position.y = -1.065f;
+	            //playerS.GetComponent<Player>().position.z = 42.55365f;
 	            takeBtn.GetComponent<Button>().onClick.RemoveAllListeners();
-	            takeBtn.GetComponent<Button>().onClick.AddListener(() => { loading.LoadingProgress(3); });
+	            takeBtn.GetComponent<Button>().onClick.AddListener(() =>
+	            {
+		            playerS.GetComponent<Transform>().position = new Vector3(-1.065f, 0, 42.55365f);
+		            gameObject.GetComponent<Player>().SavePlayer(); 
+		            hit.collider.GetComponent<AudioSource>().Play(); 
+		            hit.collider.GetComponent<Loading>().LoadingProgress(3);
+		            
+		            
+	            });
+            }
+            else if (hit.collider.tag == "Door")
+            {
+	            interactText.text = "Нажми на кнопку для взаимодейстие";
+	            InteractionUI.SetActive(true);
+	            takeBtn.SetActive(true);
+	            
+	            takeBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+	            takeBtn.GetComponent<Button>().onClick.AddListener(() =>
+	            {
+		            if (hit.collider.GetComponent<Animator>().GetFloat("IsOpened") == 0)
+		            {
+			            hit.collider.GetComponent<Animator>().SetFloat("IsOpened", 1);
+		            }
+		            else if(hit.collider.GetComponent<Animator>().GetFloat("IsOpened") == 1)
+		            {
+			            hit.collider.GetComponent<Animator>().SetFloat("IsOpened", 0);
+		            }
+		            hit.collider.GetComponent<AudioSource>().Play();
 
+	            });
             }
             else
             {
@@ -105,7 +135,12 @@ public class Inventory : MonoBehaviour
                 takeBtn.SetActive(false);
             }
         }
-        
+        else
+        {
+	        takeBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+	        InteractionUI.SetActive(false);
+	        takeBtn.SetActive(false);
+        }
     }
 
     public void ButtonsClicked()
@@ -119,6 +154,7 @@ public class Inventory : MonoBehaviour
     {
 	    for (int i = 0; i < playerS.GetComponent<Player>().items.Length / 3; i++) // CONTINUE!!!
         {
+			Debug.Log(playerS.GetComponent<Player>().items[i, 0]);
             Transform cell = CellContainer.transform.GetChild(i);
             Transform icon = cell.GetChild(0);
             Image img = icon.GetComponent<Image>();
@@ -126,6 +162,7 @@ public class Inventory : MonoBehaviour
             TextMeshProUGUI itemTitle = icon.GetChild(1).GetComponent<TextMeshProUGUI>();
             if (playerS.GetComponent<Player>().items[i, 0] != null)
             {
+	            
 	            string itemName = playerS.GetComponent<Player>().items[i, 0];
 
 				pref = Resources.Load("Prefabs/" + itemName) as GameObject;

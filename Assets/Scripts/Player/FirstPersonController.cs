@@ -64,13 +64,18 @@ public class FirstPersonController : MonoBehaviour
     }
     public void PlayerCamera()
     {
-        cameraX = joystickCamera.Horizontal * cameraSensitivity * Time.deltaTime;
-        cameraY = joystickCamera.Vertical * cameraSensitivity * Time.deltaTime;
+        if (joystickCamera.Horizontal >= 0.2f || joystickCamera.Horizontal <= -0.2f || joystickCamera.Vertical >= 0.2f || joystickCamera.Vertical <= -0.2f)
+        {
+            cameraX = joystickCamera.Horizontal * cameraSensitivity * Time.deltaTime;
+            cameraY = joystickCamera.Vertical * cameraSensitivity * Time.deltaTime;
+            Player.Rotate(Vector3.up * -cameraX);
+            xRotation += cameraY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            cameraTransform.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
+        }
+
         //Debug.Log("joystickCamera.Horizontal - " + cameraY);
-        Player.Rotate(Vector3.up * -cameraX);
-        xRotation += cameraY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
+       
         
         //Player.Rotate(Vector3.right * cameraY);
         //Player.Rotate(Vector3.right * xRotation);

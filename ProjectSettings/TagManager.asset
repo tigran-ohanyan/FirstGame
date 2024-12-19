@@ -17,6 +17,7 @@ TagManager:
   - BatterPercent
   - Hood
   - Door
+  - Car
   layers:
   - Default
   - TransparentFX

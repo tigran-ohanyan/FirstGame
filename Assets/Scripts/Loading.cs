@@ -11,6 +11,7 @@ public class Loading : MonoBehaviour
     //public GameObject Menu;
     private int SceneNumber;
     public bool OnStart;
+    public GameObject hood;
 
     public Slider scale;
 
@@ -20,7 +21,13 @@ public class Loading : MonoBehaviour
             LoadingProgress(1);
     }
 
-    public void LoadingProgress(int SceneID){
+    public void LoadingProgress(int SceneID)
+    {
+        Debug.Log($"SceneID = {SceneID}");
+        if (hood != null)
+        {
+            hood.SetActive(false);
+        }
         LoadingScreen.SetActive(true);
         //Menu.SetActive(false);
         SceneNumber = SceneID;
